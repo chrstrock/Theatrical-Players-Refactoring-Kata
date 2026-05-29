@@ -14,10 +14,9 @@ public class StatementPrinter {
             result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(getThisAmount(perf, plays)), perf.audience));
             totalAmount += getThisAmount(perf, plays);
         }
-        var volumeCredits = totalVolumeCredits(invoice, plays);
 
         result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
-        result.append(String.format("You earned %s credits%n", volumeCredits));
+        result.append(String.format("You earned %s credits%n", totalVolumeCredits(invoice, plays)));
         return result.toString();
     }
 
