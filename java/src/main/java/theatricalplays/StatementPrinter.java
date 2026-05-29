@@ -19,11 +19,11 @@ public class StatementPrinter {
     }
 
     private static int totalAmount(Invoice invoice, Map<String, Play> plays) {
-        var totalAmount = 0;
+        var result = 0;
         for(var perf : invoice.performances){
-            totalAmount += getThisAmount(perf, plays);
+            result += getThisAmount(perf, plays);
         }
-        return totalAmount;
+        return result;
     }
 
     private static int totalVolumeCredits(Invoice invoice, Map<String, Play> plays) {
