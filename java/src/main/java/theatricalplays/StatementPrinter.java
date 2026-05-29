@@ -11,18 +11,16 @@ public class StatementPrinter {
         var volumeCredits = 0;
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
 
-        NumberFormat frmt = usd();
-
         for (var perf : invoice.performances) {
 
             // add volume credits
             volumeCredits += volumeCreditsFor(plays, perf);
 
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, frmt.format(getThisAmount(perf, plays) / 100), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd().format(getThisAmount(perf, plays) / 100), perf.audience));
             totalAmount += getThisAmount(perf, plays);
         }
-        result.append(String.format("Amount owed is %s%n", frmt.format(totalAmount / 100)));
+        result.append(String.format("Amount owed is %s%n", usd().format(totalAmount / 100)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
         return result.toString();
     }
