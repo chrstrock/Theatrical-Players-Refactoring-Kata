@@ -17,17 +17,16 @@ public class StatementPrinter {
             volumeCredits += volumeCreditsFor(plays, perf);
 
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd().format(getThisAmount(perf, plays) / 100), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(getThisAmount(perf, plays)), perf.audience));
             totalAmount += getThisAmount(perf, plays);
         }
-        result.append(String.format("Amount owed is %s%n", usd().format(totalAmount / 100)));
+        result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
         return result.toString();
     }
 
-    private static NumberFormat usd() {
-        NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
-        return frmt;
+    private static String usd(int number) {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(number / 100);
     }
 
     private static int volumeCreditsFor(Map<String, Play> plays, Performance perf) {
