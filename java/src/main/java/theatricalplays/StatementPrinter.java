@@ -7,17 +7,23 @@ import java.util.Map;
 public class StatementPrinter {
 
     public String print(Invoice invoice, Map<String, Play> plays) {
-        var totalAmount = 0;
+
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
         for(var perf : invoice.performances){
             // print line for this order
             result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(getThisAmount(perf, plays)), perf.audience));
-            totalAmount += getThisAmount(perf, plays);
         }
-
-        result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
+        result.append(String.format("Amount owed is %s%n", usd(totalAmount(invoice, plays))));
         result.append(String.format("You earned %s credits%n", totalVolumeCredits(invoice, plays)));
         return result.toString();
+    }
+
+    private static int totalAmount(Invoice invoice, Map<String, Play> plays) {
+        var totalAmount = 0;
+        for(var perf : invoice.performances){
+            totalAmount += getThisAmount(perf, plays);
+        }
+        return totalAmount;
     }
 
     private static int totalVolumeCredits(Invoice invoice, Map<String, Play> plays) {
