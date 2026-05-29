@@ -14,16 +14,15 @@ public class StatementPrinter {
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (var perf : invoice.performances) {
-            var play = plays.get(perf.playID);
-            var thisAmount = getThisAmount(perf, play);
+            var thisAmount = getThisAmount(perf, plays);
 
             // add volume credits
             volumeCredits += Math.max(perf.audience - 30, 0);
             // add extra credit for every ten comedy attendees
-            if ("comedy".equals(play.type)) volumeCredits += Math.floor(perf.audience / 5);
+            if ("comedy".equals(playFor(plays, perf).type)) volumeCredits += Math.floor(perf.audience / 5);
 
             // print line for this order
-            result += String.format("  %s: %s (%s seats)%n", play.name, frmt.format(thisAmount / 100), perf.audience);
+            result += String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, frmt.format(thisAmount / 100), perf.audience);
             totalAmount += thisAmount;
         }
         result += String.format("Amount owed is %s%n", frmt.format(totalAmount / 100));
@@ -31,10 +30,14 @@ public class StatementPrinter {
         return result;
     }
 
-    private static int getThisAmount(Performance perf, Play play) {
+    private static Play playFor(Map<String, Play> plays, Performance perf) {
+        return plays.get(perf.playID);
+    }
+
+    private static int getThisAmount(Performance perf, Map<String, Play>plays) {
         var result = 0;
 
-        switch (play.type) {
+        switch (playFor(plays, perf).type) {
             case "tragedy" -> {
                 result = 40000;
                 if (perf.audience > 30) {
@@ -48,7 +51,7 @@ public class StatementPrinter {
                 }
                 result += 300 * perf.audience;
             }
-            default -> throw new Error("unknown type: %s".formatted(play.type));
+            default -> throw new Error("unknown type: %s".formatted(playFor(plays, perf).type));
         }
         return result;
     }
