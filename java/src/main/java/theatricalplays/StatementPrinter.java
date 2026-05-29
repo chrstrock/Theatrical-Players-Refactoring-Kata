@@ -8,21 +8,25 @@ public class StatementPrinter {
 
     public String print(Invoice invoice, Map<String, Play> plays) {
         var totalAmount = 0;
-        var volumeCredits = 0;
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
-
-        for (var perf : invoice.performances) {
-
-            // add volume credits
-            volumeCredits += volumeCreditsFor(plays, perf);
-
+        for(var perf : invoice.performances){
             // print line for this order
             result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(getThisAmount(perf, plays)), perf.audience));
             totalAmount += getThisAmount(perf, plays);
         }
+        var volumeCredits = totalVolumeCredits(invoice, plays);
+
         result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
         return result.toString();
+    }
+
+    private static int totalVolumeCredits(Invoice invoice, Map<String, Play> plays) {
+        var volumeCredits = 0;
+        for (var perf : invoice.performances) {
+            volumeCredits += volumeCreditsFor(plays, perf);
+        }
+        return volumeCredits;
     }
 
     private static String usd(int number) {
