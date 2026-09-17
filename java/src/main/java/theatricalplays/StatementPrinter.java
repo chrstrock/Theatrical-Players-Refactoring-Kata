@@ -6,7 +6,10 @@ import java.util.Map;
 
 public class StatementPrinter {
 
+    private Map<String, Play> plays;
+
     public String print(Invoice invoice, Map<String, Play> plays) {
+        this.plays = plays;
         var totalAmount = 0;
         var volumeCredits = 0;
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
