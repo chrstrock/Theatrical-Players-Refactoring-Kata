@@ -20,15 +20,15 @@ public class StatementPrinter {
             volumeCredits += getVolumeCredits(perf);
 
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, format(amountFor(perf) / 100), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(amountFor(perf) / 100), perf.audience));
             totalAmount += amountFor(perf);
         }
-        result.append(String.format("Amount owed is %s%n", format(totalAmount / 100)));
+        result.append(String.format("Amount owed is %s%n", usd(totalAmount / 100)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
         return result.toString();
     }
 
-    String format(long number){
+    String usd(long number){
         return NumberFormat.getCurrencyInstance(Locale.US).format(number);
     }
     private int getVolumeCredits(Performance perf) {
