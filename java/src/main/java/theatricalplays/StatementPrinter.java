@@ -18,7 +18,7 @@ public class StatementPrinter {
 
         for (var perf : invoice.performances) {
             var play = playFor(plays, perf);
-            var thisAmount = amountFor(perf, play);
+            var thisAmount = amountFor(perf);
 
             // add volume credits
             volumeCredits += Math.max(perf.audience - 30, 0);
@@ -38,10 +38,10 @@ public class StatementPrinter {
         return plays.get(perf.playID);
     }
 
-    private static int amountFor(Performance perf, Play play) {
+    private int amountFor(Performance perf) {
         var result = 0;
 
-        switch (play.type) {
+        switch (playFor(this.getPlays(), perf).type) {
             case "tragedy":
                 result = 40000;
                 if (perf.audience > 30) {
@@ -56,9 +56,16 @@ public class StatementPrinter {
                 result += 300 * perf.audience;
                 break;
             default:
-                throw new Error("unknown type: %s".formatted(play.type));
+                throw new Error("unknown type: %s".formatted(playFor(this.getPlays(), perf).type));
         }
         return result;
     }
 
+    public Map<String, Play> getPlays() {
+        return plays;
+    }
+
+    public void setPlays(Map<String, Play> plays) {
+        this.plays = plays;
+    }
 }
