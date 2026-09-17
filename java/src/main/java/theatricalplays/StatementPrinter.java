@@ -19,9 +19,7 @@ public class StatementPrinter {
         for (var perf : invoice.performances) {
 
             // add volume credits
-            volumeCredits += Math.max(perf.audience - 30, 0);
-            // add extra credit for every ten comedy attendees
-            if ("comedy".equals(playFor(plays, perf).type)) volumeCredits = (int) (volumeCredits + (double) (perf.audience / 5));
+            volumeCredits = getVolumeCredits(plays, perf, volumeCredits);
 
             // print line for this order
             result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, frmt.format(amountFor(perf) / 100), perf.audience));
@@ -30,6 +28,13 @@ public class StatementPrinter {
         result.append(String.format("Amount owed is %s%n", frmt.format(totalAmount / 100)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
         return result.toString();
+    }
+
+    private static int getVolumeCredits(Map<String, Play> plays, Performance perf, int volumeCredits) {
+        volumeCredits += Math.max(perf.audience - 30, 0);
+        // add extra credit for every ten comedy attendees
+        if ("comedy".equals(playFor(plays, perf).type)) volumeCredits = (int) (volumeCredits + (double) (perf.audience / 5));
+        return volumeCredits;
     }
 
     private static Play playFor(Map<String, Play> plays, Performance perf) {
