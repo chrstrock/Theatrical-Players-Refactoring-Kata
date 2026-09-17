@@ -14,22 +14,23 @@ public class StatementPrinter {
         var volumeCredits = 0;
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
 
-        NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
-
         for (var perf : invoice.performances) {
 
             // add volume credits
             volumeCredits += getVolumeCredits(perf);
 
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, frmt.format(amountFor(perf) / 100), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, format(amountFor(perf) / 100), perf.audience));
             totalAmount += amountFor(perf);
         }
-        result.append(String.format("Amount owed is %s%n", frmt.format(totalAmount / 100)));
+        result.append(String.format("Amount owed is %s%n", format(totalAmount / 100)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
         return result.toString();
     }
 
+    String format(long number){
+        return NumberFormat.getCurrencyInstance(Locale.US).format(number);
+    }
     private int getVolumeCredits(Performance perf) {
         int result = 0;
         result += Math.max(perf.audience - 30, 0);
