@@ -17,7 +17,6 @@ public class StatementPrinter {
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (var perf : invoice.performances) {
-            var thisAmount = amountFor(perf);
 
             // add volume credits
             volumeCredits += Math.max(perf.audience - 30, 0);
@@ -25,8 +24,8 @@ public class StatementPrinter {
             if ("comedy".equals(playFor(plays, perf).type)) volumeCredits = (int) (volumeCredits + (double) (perf.audience / 5));
 
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, frmt.format(thisAmount / 100), perf.audience));
-            totalAmount += thisAmount;
+            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, frmt.format(amountFor(perf) / 100), perf.audience));
+            totalAmount += amountFor(perf);
         }
         result.append(String.format("Amount owed is %s%n", frmt.format(totalAmount / 100)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
