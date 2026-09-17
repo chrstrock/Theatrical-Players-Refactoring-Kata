@@ -14,16 +14,15 @@ public class StatementPrinter {
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (var perf : invoice.performances) {
-            var play = plays.get(perf.playID);
-            var thisAmount = amountFor(perf, play);
+            var thisAmount = amountFor(perf, plays.get(perf.playID));
 
             // add volume credits
             volumeCredits += Math.max(perf.audience - 30, 0);
             // add extra credit for every ten comedy attendees
-            if ("comedy".equals(play.type)) volumeCredits = (int) (volumeCredits + (double) (perf.audience / 5));
+            if ("comedy".equals(plays.get(perf.playID).type)) volumeCredits = (int) (volumeCredits + (double) (perf.audience / 5));
 
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", play.name, frmt.format(thisAmount / 100), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", plays.get(perf.playID).name, frmt.format(thisAmount / 100), perf.audience));
             totalAmount += thisAmount;
         }
         result.append(String.format("Amount owed is %s%n", frmt.format(totalAmount / 100)));
@@ -31,22 +30,22 @@ public class StatementPrinter {
         return result.toString();
     }
 
-    private static int amountFor(Performance perf, Play play) {
+    private static int amountFor(Performance performance, Play play) {
         var result = 0;
 
         switch (play.type) {
             case "tragedy":
                 result = 40000;
-                if (perf.audience > 30) {
-                    result += 1000 * (perf.audience - 30);
+                if (performance.audience > 30) {
+                    result += 1000 * (performance.audience - 30);
                 }
                 break;
             case "comedy":
                 result = 30000;
-                if (perf.audience > 20) {
-                    result += 10000 + 500 * (perf.audience - 20);
+                if (performance.audience > 20) {
+                    result += 10000 + 500 * (performance.audience - 20);
                 }
-                result += 300 * perf.audience;
+                result += 300 * performance.audience;
                 break;
             default:
                 throw new Error("unknown type: %s".formatted(play.type));
