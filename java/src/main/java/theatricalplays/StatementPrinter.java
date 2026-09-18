@@ -13,13 +13,17 @@ public class StatementPrinter {
         this.invoice = invoice;
         this.plays = plays;
 
-        return renderPlainText(invoice, plays);
+        StatementData statementData = new StatementData();
+        statementData.customer = invoice.customer;
+        statementData.performances = invoice.performances;
+
+        return renderPlainText(statementData, plays);
     }
 
-    private String renderPlainText(Invoice invoice, Map<String, Play> plays) {
-        StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
+    private String renderPlainText(StatementData data, Map<String, Play> plays) {
+        StringBuilder result = new StringBuilder(String.format("Statement for %s%n", data.customer));
 
-        for (var perf: invoice.performances) {
+        for (var perf: data.performances) {
             result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(amountFor(perf)), perf.audience));
         }
 
