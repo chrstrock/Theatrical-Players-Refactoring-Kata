@@ -13,9 +13,11 @@ public class StatementPrinter {
         this.invoice = invoice;
         this.plays = plays;
 
+        return renderPlainText(invoice, plays);
+    }
+
+    private String renderPlainText(Invoice invoice, Map<String, Play> plays) {
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
-
-
 
         for (var perf: invoice.performances) {
             result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(amountFor(perf)), perf.audience));
