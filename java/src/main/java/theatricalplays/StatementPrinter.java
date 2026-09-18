@@ -12,12 +12,17 @@ public class StatementPrinter {
     public String print(Invoice invoice, Map<String, Play> plays) {
         this.invoice = invoice;
         this.plays = plays;
-        var totalAmount = 0;
+
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
 
+        var totalAmount = 0;
+
+        for (var perf: invoice.performances) {
+            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(amountFor(perf)), perf.audience));
+        }
         for (var perf : invoice.performances) {
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(amountFor(perf)), perf.audience));
+
             totalAmount += amountFor(perf);
         }
         result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
