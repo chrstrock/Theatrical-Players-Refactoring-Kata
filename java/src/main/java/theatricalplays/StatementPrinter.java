@@ -21,8 +21,7 @@ public class StatementPrinter {
             result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(amountFor(perf)), perf.audience));
         }
 
-        var totalAmount = getTotalAmount();
-        result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
+        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount())));
         result.append(String.format("You earned %s credits%n", getVolumeCredits()));
         return result.toString();
     }
@@ -87,7 +86,4 @@ public class StatementPrinter {
         return plays;
     }
 
-    public void setPlays(Map<String, Play> plays) {
-        this.plays = plays;
-    }
 }
