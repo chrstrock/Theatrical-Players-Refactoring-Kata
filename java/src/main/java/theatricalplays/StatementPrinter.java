@@ -21,20 +21,20 @@ public class StatementPrinter {
             result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(amountFor(perf)), perf.audience));
         }
 
-        var totalAmount = getTotalAmount(invoice);
+        var totalAmount = getTotalAmount();
         result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
         result.append(String.format("You earned %s credits%n", getVolumeCredits()));
         return result.toString();
     }
 
-    private int getTotalAmount(Invoice invoice) {
-        var totalAmount = 0;
+    private int getTotalAmount() {
+        var result = 0;
         for (var perf : invoice.performances) {
             // print line for this order
 
-            totalAmount += amountFor(perf);
+            result += amountFor(perf);
         }
-        return totalAmount;
+        return result;
     }
 
     private int getVolumeCredits() {
