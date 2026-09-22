@@ -6,20 +6,18 @@ import java.util.Map;
 
 public class StatementPrinter {
 
+    private Invoice invoice;
     private Map<String, Play> plays;
     public String print(Invoice invoice, Map<String, Play> plays) {
+        this.invoice = invoice;
         this.plays = plays;
         var totalAmount = 0;
 
         var result = String.format("Statement for %s%n", invoice.customer);
 
-        var volumeCredits = 0;
-        for (var perf : invoice.performances) {
+        var volumeCredits = totalVolumeCredits();
 
-            volumeCredits += volumeCreditsFor(perf);
-        }
-
-            // print line for this order
+        // print line for this order
         for(var perf : invoice.performances){
             result += String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience);
             totalAmount += getThisAmount(perf);
@@ -27,6 +25,15 @@ public class StatementPrinter {
         result += String.format("Amount owed is %s%n", usd(totalAmount));
         result += String.format("You earned %s credits%n", volumeCredits);
         return result;
+    }
+
+    private int totalVolumeCredits() {
+        var volumeCredits = 0;
+        for (var perf : invoice.performances) {
+
+            volumeCredits += volumeCreditsFor(perf);
+        }
+        return volumeCredits;
     }
 
     private String usd(long number) {
