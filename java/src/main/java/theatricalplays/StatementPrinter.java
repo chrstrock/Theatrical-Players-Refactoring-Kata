@@ -15,15 +15,13 @@ public class StatementPrinter {
 
         var result = String.format("Statement for %s%n", invoice.customer);
 
-        var volumeCredits = totalVolumeCredits();
-
         // print line for this order
         for(var perf : invoice.performances){
             result += String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience);
             totalAmount += getThisAmount(perf);
         }
         result += String.format("Amount owed is %s%n", usd(totalAmount));
-        result += String.format("You earned %s credits%n", volumeCredits);
+        result += String.format("You earned %s credits%n", totalVolumeCredits());
         return result;
     }
 
