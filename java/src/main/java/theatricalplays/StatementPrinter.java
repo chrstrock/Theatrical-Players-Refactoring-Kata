@@ -16,8 +16,10 @@ public class StatementPrinter {
         for (var perf : invoice.performances) {
 
             volumeCredits += volumeCreditsFor(perf);
+        }
 
             // print line for this order
+        for(var perf : invoice.performances){
             result += String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience);
             totalAmount += getThisAmount(perf);
         }
