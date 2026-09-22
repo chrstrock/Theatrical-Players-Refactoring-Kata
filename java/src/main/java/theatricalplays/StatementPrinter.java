@@ -33,25 +33,25 @@ public class StatementPrinter {
     }
 
     private static int getThisAmount(Performance perf, Play play) {
-        int thisAmount;
+        int result;
         switch (play.type) {
             case "tragedy":
-                thisAmount = 40000;
+                result = 40000;
                 if (perf.audience > 30) {
-                    thisAmount += 1000 * (perf.audience - 30);
+                    result += 1000 * (perf.audience - 30);
                 }
                 break;
             case "comedy":
-                thisAmount = 30000;
+                result = 30000;
                 if (perf.audience > 20) {
-                    thisAmount += 10000 + 500 * (perf.audience - 20);
+                    result += 10000 + 500 * (perf.audience - 20);
                 }
-                thisAmount += 300 * perf.audience;
+                result += 300 * perf.audience;
                 break;
             default:
                 throw new Error("unknown type: %s".formatted(play.type));
         }
-        return thisAmount;
+        return result;
     }
 
 }
