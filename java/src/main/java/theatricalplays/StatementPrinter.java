@@ -13,18 +13,16 @@ public class StatementPrinter {
         this.plays = plays;
 
 
-        var result = String.format("Statement for %s%n", invoice.customer);
+        StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
 
         // print line for this order
         for(var perf : invoice.performances){
-            result += String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience);
+            result.append(String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience));
 
         }
-        var totalAmount = getTotalAmount(invoice);
-
-        result += String.format("Amount owed is %s%n", usd(totalAmount));
-        result += String.format("You earned %s credits%n", totalVolumeCredits());
-        return result;
+        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount(invoice))));
+        result.append(String.format("You earned %s credits%n", totalVolumeCredits()));
+        return result.toString();
     }
 
     private int getTotalAmount(Invoice invoice) {
