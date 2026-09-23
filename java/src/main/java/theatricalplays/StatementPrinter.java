@@ -6,19 +6,18 @@ import java.util.Map;
 
 public class StatementPrinter {
 
-    private Invoice invoice;
     private Map<String, Play> plays;
+    private StatementData data;
 
     public String print(Invoice invoice, Map<String, Play> plays) {
-        this.invoice = invoice;
         this.plays = plays;
-        StatementData statementData = new StatementData();
-        statementData.customer = invoice.customer;
-        statementData.performances = invoice.performances;
-        return renderPlainText(statementData);
+        this.data = new StatementData();
+        this.data.customer = invoice.customer;
+        this.data.performances = invoice.performances;
+        return renderPlainText();
     }
 
-    private String renderPlainText(StatementData data) {
+    private String renderPlainText() {
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", data.customer));
 
         // print line for this order
@@ -26,12 +25,12 @@ public class StatementPrinter {
             result.append(String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience));
 
         }
-        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount(data))));
+        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount())));
         result.append(String.format("You earned %s credits%n", totalVolumeCredits()));
         return result.toString();
     }
 
-    private int getTotalAmount(StatementData data) {
+    private int getTotalAmount() {
         var totalAmount = 0;
         for(var perf: data.performances) {
             totalAmount += getThisAmount(perf);
@@ -41,7 +40,7 @@ public class StatementPrinter {
 
     private int totalVolumeCredits() {
         var volumeCredits = 0;
-        for (var perf : invoice.performances) {
+        for (var perf : data.performances) {
 
             volumeCredits += volumeCreditsFor(perf);
         }
