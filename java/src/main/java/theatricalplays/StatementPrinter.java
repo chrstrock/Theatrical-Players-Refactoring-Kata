@@ -10,31 +10,30 @@ public class StatementPrinter {
     private Map<String, Play> plays;
 
     public String print(Invoice invoice, Map<String, Play> plays) {
-        StatementData statementData = new StatementData();
-        statementData.customer = invoice.customer;
-        return renderPlainText(invoice, plays, statementData);
-    }
-
-    private String renderPlainText(Invoice invoice, Map<String, Play> plays, StatementData data) {
         this.invoice = invoice;
         this.plays = plays;
+        StatementData statementData = new StatementData();
+        statementData.customer = invoice.customer;
+        statementData.performances = invoice.performances;
+        return renderPlainText(statementData);
+    }
 
-
-        StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
+    private String renderPlainText(StatementData data) {
+        StringBuilder result = new StringBuilder(String.format("Statement for %s%n", data.customer));
 
         // print line for this order
-        for(var perf : invoice.performances){
+        for(var perf : data.performances){
             result.append(String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience));
 
         }
-        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount(invoice))));
+        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount(data))));
         result.append(String.format("You earned %s credits%n", totalVolumeCredits()));
         return result.toString();
     }
 
-    private int getTotalAmount(Invoice invoice) {
+    private int getTotalAmount(StatementData data) {
         var totalAmount = 0;
-        for(var perf: invoice.performances) {
+        for(var perf: data.performances) {
             totalAmount += getThisAmount(perf);
         }
         return totalAmount;
