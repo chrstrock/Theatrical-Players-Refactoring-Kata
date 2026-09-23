@@ -8,11 +8,14 @@ public class StatementPrinter {
 
     private Invoice invoice;
     private Map<String, Play> plays;
+
     public String print(Invoice invoice, Map<String, Play> plays) {
-        return renderPlainText(invoice, plays);
+        StatementData statementData = new StatementData();
+        statementData.customer = invoice.customer;
+        return renderPlainText(invoice, plays, statementData);
     }
 
-    private String renderPlainText(Invoice invoice, Map<String, Play> plays) {
+    private String renderPlainText(Invoice invoice, Map<String, Play> plays, StatementData data) {
         this.invoice = invoice;
         this.plays = plays;
 
