@@ -9,6 +9,10 @@ public class StatementPrinter {
     private Invoice invoice;
     private Map<String, Play> plays;
     public String print(Invoice invoice, Map<String, Play> plays) {
+        return renderPlainText(invoice, plays);
+    }
+
+    private String renderPlainText(Invoice invoice, Map<String, Play> plays) {
         this.invoice = invoice;
         this.plays = plays;
 
