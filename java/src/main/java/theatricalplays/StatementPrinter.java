@@ -13,18 +13,18 @@ public class StatementPrinter {
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
-        for (var perf : invoice.performances) {
-            var play = plays.get(perf.playID);
-            var thisAmount = getThisAmount(perf, play);
+        for (var performance : invoice.performances) {
+            var play = plays.get(performance.playID);
+            var thisAmount = getThisAmount(performance, play);
 
             // add volume credits
-            volumeCredits += Math.max(perf.audience - 30, 0);
+            volumeCredits += Math.max(performance.audience - 30, 0);
             // add extra credit for every ten comedy attendees
             if ("comedy".equals(play.type))
-                volumeCredits = (int) (volumeCredits + Math.floor((double) perf.audience / 5));
+                volumeCredits = (int) (volumeCredits + Math.floor((double) performance.audience / 5));
 
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", play.name, frmt.format(thisAmount / 100), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", play.name, frmt.format(thisAmount / 100), performance.audience));
             totalAmount += thisAmount;
         }
         result.append(String.format("Amount owed is %s%n", frmt.format(totalAmount / 100)));
