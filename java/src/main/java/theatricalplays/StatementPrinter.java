@@ -8,21 +8,23 @@ public class StatementPrinter {
 
     private final Invoice invoice;
     private final Map<String, Play> plays;
+    private final StatementData statementData;
 
     public StatementPrinter(Invoice invoice, Map<String, Play> plays) {
         this.invoice = invoice;
         this.plays = plays;
+        this.statementData = new StatementData();
     }
 
     public String print() {
-        StatementData statementData = new StatementData();
         statementData.customer = invoice.customer;
+        statementData.performances = invoice.performances;
         return renderPlainText(statementData);
     }
 
     private String renderPlainText(StatementData data) {
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", data.customer));
-        for(var perf : invoice.performances){
+        for(var perf : data.performances){
             // print line for this order
             result.append(String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience));
         }
@@ -33,7 +35,7 @@ public class StatementPrinter {
 
     private int totalAmount() {
         var result = 0;
-        for(var perf : invoice.performances){
+        for(var perf : statementData.performances){
             result += getThisAmount(perf);
         }
         return result;
@@ -41,7 +43,7 @@ public class StatementPrinter {
 
     private int totalVolumeCredits() {
         var volumeCredits = 0;
-        for (var perf : invoice.performances) {
+        for (var perf : statementData.performances) {
             volumeCredits += volumeCreditsFor(perf);
         }
         return volumeCredits;
