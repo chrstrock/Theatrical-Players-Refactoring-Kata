@@ -23,8 +23,8 @@ class StatementPrinterTests {
                 new Performance("as-like", 35),
                 new Performance("othello", 40)));
 
-        StatementPrinter statementPrinter = new StatementPrinter();
-        var result = statementPrinter.print(invoice, plays);
+        StatementPrinter statementPrinter = new StatementPrinter(invoice, plays);
+        var result = statementPrinter.print();
 
         verify(result);
     }
@@ -39,9 +39,9 @@ class StatementPrinterTests {
                 new Performance("henry-v", 53),
                 new Performance("as-like", 55)));
 
-        StatementPrinter statementPrinter = new StatementPrinter();
+        StatementPrinter statementPrinter = new StatementPrinter(invoice, plays);
         Error error = Assertions.assertThrows(Error.class,
-            () -> statementPrinter.print(invoice, plays));
+                statementPrinter::print);
         assertEquals("unknown type: history", error.getMessage());
     }
 }

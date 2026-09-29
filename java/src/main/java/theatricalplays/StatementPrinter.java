@@ -6,30 +6,37 @@ import java.util.Map;
 
 public class StatementPrinter {
 
-    public String print(Invoice invoice, Map<String, Play> plays) {
+    private final Invoice invoice;
+    private final Map<String, Play> plays;
 
-        StringBuilder result = new StringBuilder(String.format("Statement for %s%n", invoice.customer));
+    public StatementPrinter(Invoice invoice, Map<String, Play> plays) {
+        this.invoice = invoice;
+        this.plays = plays;
+    }
+
+    public String print() {
+        StringBuilder result = new StringBuilder(String.format("Statement for %s%n", this.invoice.customer));
         for(var perf : invoice.performances){
             // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", playFor(plays, perf).name, usd(getThisAmount(perf, plays)), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience));
         }
-        result.append(String.format("Amount owed is %s%n", usd(totalAmount(invoice, plays))));
-        result.append(String.format("You earned %s credits%n", totalVolumeCredits(invoice, plays)));
+        result.append(String.format("Amount owed is %s%n", usd(totalAmount())));
+        result.append(String.format("You earned %s credits%n", totalVolumeCredits()));
         return result.toString();
     }
 
-    private static int totalAmount(Invoice invoice, Map<String, Play> plays) {
+    private int totalAmount() {
         var result = 0;
         for(var perf : invoice.performances){
-            result += getThisAmount(perf, plays);
+            result += getThisAmount(perf);
         }
         return result;
     }
 
-    private static int totalVolumeCredits(Invoice invoice, Map<String, Play> plays) {
+    private int totalVolumeCredits() {
         var volumeCredits = 0;
         for (var perf : invoice.performances) {
-            volumeCredits += volumeCreditsFor(plays, perf);
+            volumeCredits += volumeCreditsFor(perf);
         }
         return volumeCredits;
     }
@@ -38,22 +45,22 @@ public class StatementPrinter {
         return NumberFormat.getCurrencyInstance(Locale.US).format(number / 100);
     }
 
-    private static int volumeCreditsFor(Map<String, Play> plays, Performance perf) {
+    private int volumeCreditsFor(Performance perf) {
         int result = 0;
         result  = Math.max(perf.audience - 30, 0);
         // add extra credit for every ten comedy attendees
-        if ("comedy".equals(playFor(plays, perf).type)) result += (int) Math.floor((double) perf.audience / 5);
+        if ("comedy".equals(playFor(perf).type)) result += (int) Math.floor((double) perf.audience / 5);
         return result;
     }
 
-    private static Play playFor(Map<String, Play> plays, Performance perf) {
-        return plays.get(perf.playID);
+    private Play playFor(Performance perf) {
+        return this.plays.get(perf.playID);
     }
 
-    private static int getThisAmount(Performance perf, Map<String, Play>plays) {
+    private int getThisAmount(Performance perf) {
         var result = 0;
 
-        switch (playFor(plays, perf).type) {
+        switch (playFor(perf).type) {
             case "tragedy" -> {
                 result = 40000;
                 if (perf.audience > 30) {
@@ -67,7 +74,7 @@ public class StatementPrinter {
                 }
                 result += 300 * perf.audience;
             }
-            default -> throw new Error("unknown type: %s".formatted(playFor(plays, perf).type));
+            default -> throw new Error("unknown type: %s".formatted(playFor(perf).type));
         }
         return result;
     }
