@@ -15,10 +15,11 @@ public class StatementPrinter {
     }
 
     public String print() {
-        return renderPlainText();
+        StatementData data = new StatementData();
+        return renderPlainText(data);
     }
 
-    private String renderPlainText() {
+    private String renderPlainText(StatementData data) {
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", this.invoice.customer));
         for(var perf : invoice.performances){
             // print line for this order
