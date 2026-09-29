@@ -15,6 +15,10 @@ public class StatementPrinter {
     }
 
     public String print() {
+        return renderPlainText();
+    }
+
+    private String renderPlainText() {
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", this.invoice.customer));
         for(var perf : invoice.performances){
             // print line for this order
