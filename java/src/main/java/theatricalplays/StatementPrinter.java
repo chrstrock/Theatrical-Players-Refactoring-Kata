@@ -14,6 +14,8 @@ public class StatementPrinter {
         this.data = new StatementData();
         this.data.customer = invoice.customer;
         this.data.performances = invoice.performances.stream().map(this::enrichPerformance).toList();
+        this.data.totalAmount = getTotalAmount(data);
+        this.data.totalVolumeCredits = totalVolumeCredits(data);
         return renderPlainText();
     }
 
@@ -35,22 +37,22 @@ public class StatementPrinter {
             result.append(String.format("  %s: %s (%s seats)%n", perf.play.name, usd(perf.amount), perf.audience));
 
         }
-        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount())));
-        result.append(String.format("You earned %s credits%n", totalVolumeCredits()));
+        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount(data))));
+        result.append(String.format("You earned %s credits%n", totalVolumeCredits(data)));
         return result.toString();
     }
 
-    private int getTotalAmount() {
+    private int getTotalAmount(StatementData data) {
         var totalAmount = 0;
-        for(var perf: data.performances) {
+        for(var perf: this.data.performances) {
             totalAmount += perf.amount;
         }
         return totalAmount;
     }
 
-    private int totalVolumeCredits() {
+    private int totalVolumeCredits(StatementData data) {
         var volumeCredits = 0;
-        for (var perf : data.performances) {
+        for (var perf : this.data.performances) {
 
             volumeCredits += perf.volumeCredits;
         }
