@@ -13,8 +13,15 @@ public class StatementPrinter {
         this.plays = plays;
         this.data = new StatementData();
         this.data.customer = invoice.customer;
-        this.data.performances = invoice.performances;
+        this.data.performances = invoice.performances.stream().map(this::enrichPerformance).toList();
         return renderPlainText();
+    }
+
+    private EnrichedPerformance enrichPerformance(Performance performance) {
+        var result = new EnrichedPerformance();
+        result.playID = performance.playID;
+        result.audience = performance.audience;
+        return result;
     }
 
     private String renderPlainText() {
@@ -51,7 +58,7 @@ public class StatementPrinter {
         return NumberFormat.getCurrencyInstance(Locale.US).format(number / 100);
     }
 
-    private int volumeCreditsFor(Performance aPerformance) {
+    private int volumeCreditsFor(EnrichedPerformance aPerformance) {
         // add volume credits
         int result = 0;
         result += Math.max(aPerformance.audience - 30, 0);
@@ -60,11 +67,11 @@ public class StatementPrinter {
         return result;
     }
 
-    private Play playFor(Performance perf) {
+    private Play playFor(EnrichedPerformance perf) {
         return this.plays.get(perf.playID);
     }
 
-    private int getThisAmount(Performance aPerformance) {
+    private int getThisAmount(EnrichedPerformance aPerformance) {
         int result;
         switch (playFor(aPerformance).type) {
             case "tragedy":
