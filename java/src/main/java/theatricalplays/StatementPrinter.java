@@ -37,26 +37,17 @@ public class StatementPrinter {
             result.append(String.format("  %s: %s (%s seats)%n", perf.play.name, usd(perf.amount), perf.audience));
 
         }
-        result.append(String.format("Amount owed is %s%n", usd(getTotalAmount(data))));
-        result.append(String.format("You earned %s credits%n", totalVolumeCredits(data)));
+        result.append(String.format("Amount owed is %s%n", usd(data.totalAmount)));
+        result.append(String.format("You earned %s credits%n", data.totalVolumeCredits));
         return result.toString();
     }
 
     private int getTotalAmount(StatementData data) {
-        var totalAmount = 0;
-        for(var perf: data.performances) {
-            totalAmount += perf.amount;
-        }
-        return totalAmount;
+        return data.performances.stream().mapToInt(p -> p.amount).sum();
     }
 
     private int totalVolumeCredits(StatementData data) {
-        var volumeCredits = 0;
-        for (var perf : data.performances) {
-
-            volumeCredits += perf.volumeCredits;
-        }
-        return volumeCredits;
+        return data.performances.stream().mapToInt(p -> p.volumeCredits).sum();
     }
 
     private String usd(long number) {
