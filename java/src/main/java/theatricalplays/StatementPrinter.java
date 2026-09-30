@@ -21,6 +21,7 @@ public class StatementPrinter {
         var result = new EnrichedPerformance();
         result.playID = performance.playID;
         result.audience = performance.audience;
+        result.play = playFor(performance);
         return result;
     }
 
@@ -29,7 +30,7 @@ public class StatementPrinter {
 
         // print line for this order
         for(var perf : data.performances){
-            result.append(String.format("  %s: %s (%s seats)%n", playFor(perf).name, usd(getThisAmount(perf)), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", perf.play.name, usd(getThisAmount(perf)), perf.audience));
 
         }
         result.append(String.format("Amount owed is %s%n", usd(getTotalAmount())));
@@ -63,17 +64,17 @@ public class StatementPrinter {
         int result = 0;
         result += Math.max(aPerformance.audience - 30, 0);
         // add extra credit for every ten comedy attendees
-        if ("comedy".equals(playFor(aPerformance).type)) result += Math.floor(aPerformance.audience / 5);
+        if ("comedy".equals(aPerformance.play.type)) result += Math.floor(aPerformance.audience / 5);
         return result;
     }
 
-    private Play playFor(EnrichedPerformance perf) {
+    private Play playFor(Performance perf) {
         return this.plays.get(perf.playID);
     }
 
     private int getThisAmount(EnrichedPerformance aPerformance) {
         int result;
-        switch (playFor(aPerformance).type) {
+        switch (aPerformance.play.type) {
             case "tragedy":
                 result = 40000;
                 if (aPerformance.audience > 30) {
@@ -88,7 +89,7 @@ public class StatementPrinter {
                 result += 300 * aPerformance.audience;
                 break;
             default:
-                throw new Error("unknown type: %s".formatted(playFor(aPerformance).type));
+                throw new Error("unknown type: %s".formatted(aPerformance.play.type));
         }
         return result;
     }
