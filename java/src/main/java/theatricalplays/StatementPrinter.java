@@ -21,7 +21,8 @@ public class StatementPrinter {
         var result = new EnrichedPerformance();
         result.playID = performance.playID;
         result.audience = performance.audience;
-        result.play = playFor(performance);
+        result.play = playFor(result);
+        result.amount = getThisAmount(result);
         return result;
     }
 
@@ -30,7 +31,7 @@ public class StatementPrinter {
 
         // print line for this order
         for(var perf : data.performances){
-            result.append(String.format("  %s: %s (%s seats)%n", perf.play.name, usd(getThisAmount(perf)), perf.audience));
+            result.append(String.format("  %s: %s (%s seats)%n", perf.play.name, usd(perf.amount), perf.audience));
 
         }
         result.append(String.format("Amount owed is %s%n", usd(getTotalAmount())));
@@ -41,7 +42,7 @@ public class StatementPrinter {
     private int getTotalAmount() {
         var totalAmount = 0;
         for(var perf: data.performances) {
-            totalAmount += getThisAmount(perf);
+            totalAmount += perf.amount;
         }
         return totalAmount;
     }
@@ -68,7 +69,7 @@ public class StatementPrinter {
         return result;
     }
 
-    private Play playFor(Performance perf) {
+    private Play playFor(EnrichedPerformance perf) {
         return this.plays.get(perf.playID);
     }
 
