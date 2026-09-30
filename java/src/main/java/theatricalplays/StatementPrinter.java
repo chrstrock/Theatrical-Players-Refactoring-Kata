@@ -44,7 +44,7 @@ public class StatementPrinter {
 
     private int getTotalAmount(StatementData data) {
         var totalAmount = 0;
-        for(var perf: this.data.performances) {
+        for(var perf: data.performances) {
             totalAmount += perf.amount;
         }
         return totalAmount;
@@ -52,7 +52,7 @@ public class StatementPrinter {
 
     private int totalVolumeCredits(StatementData data) {
         var volumeCredits = 0;
-        for (var perf : this.data.performances) {
+        for (var perf : data.performances) {
 
             volumeCredits += perf.volumeCredits;
         }
