@@ -23,6 +23,7 @@ public class StatementPrinter {
         result.audience = performance.audience;
         result.play = playFor(result);
         result.amount = getThisAmount(result);
+        result.volumeCredits = volumeCreditsFor(result);
         return result;
     }
 
@@ -51,7 +52,7 @@ public class StatementPrinter {
         var volumeCredits = 0;
         for (var perf : data.performances) {
 
-            volumeCredits += volumeCreditsFor(perf);
+            volumeCredits += perf.volumeCredits;
         }
         return volumeCredits;
     }
