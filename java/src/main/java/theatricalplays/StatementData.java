@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 public class StatementData {
-    public String customer;
-    public List<EnrichedPerformance> performances;
-    public int totalAmount;
-    public int totalVolumeCredits;
-    public Map<String, Play> plays;
+    protected String customer;
+    protected List<EnrichedPerformance> performances;
+    protected int totalAmount;
+    protected int totalVolumeCredits;
+    protected Map<String, Play> plays;
 
     public StatementData(Invoice invoice, Map<String, Play> plays) {
         this.plays = plays;
