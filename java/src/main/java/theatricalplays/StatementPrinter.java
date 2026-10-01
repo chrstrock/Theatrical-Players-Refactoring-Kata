@@ -7,16 +7,20 @@ import java.util.Map;
 public class StatementPrinter {
 
     private Map<String, Play> plays;
-    private StatementData data;
 
     public String print(Invoice invoice, Map<String, Play> plays) {
+        return renderPlainText(createStatementData(invoice, plays));
+    }
+
+    private StatementData createStatementData(Invoice invoice, Map<String, Play> plays) {
+        StatementData data;
         this.plays = plays;
-        this.data = new StatementData();
-        this.data.customer = invoice.customer;
-        this.data.performances = invoice.performances.stream().map(this::enrichPerformance).toList();
-        this.data.totalAmount = getTotalAmount(data);
-        this.data.totalVolumeCredits = totalVolumeCredits(data);
-        return renderPlainText();
+        data = new StatementData();
+        data.customer = invoice.customer;
+        data.performances = invoice.performances.stream().map(this::enrichPerformance).toList();
+        data.totalAmount = getTotalAmount(data);
+        data.totalVolumeCredits = totalVolumeCredits(data);
+        return data;
     }
 
     private EnrichedPerformance enrichPerformance(Performance performance) {
@@ -29,7 +33,7 @@ public class StatementPrinter {
         return result;
     }
 
-    private String renderPlainText() {
+    private String renderPlainText(StatementData data) {
         StringBuilder result = new StringBuilder(String.format("Statement for %s%n", data.customer));
 
         // print line for this order
