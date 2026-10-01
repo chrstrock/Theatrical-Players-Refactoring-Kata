@@ -59,7 +59,8 @@ public class StatementPrinter {
         int result = 0;
         result += Math.max(aPerformance.audience - 30, 0);
         // add extra credit for every ten comedy attendees
-        if ("comedy".equals(aPerformance.play.type)) result += Math.floor(aPerformance.audience / 5);
+        if ("comedy".equals(aPerformance.play.type))
+            result = (int) (result + Math.floor((double) aPerformance.audience / 5));
         return result;
     }
 
